@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food For Govan</title>
+  <link rel="stylesheet" type="text/css" href="styles1.css">
+  <style>
+      /* Add a modern font */
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    /* New styles for header */
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav ul li {
+      margin-right: 10px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #888;
+    }
+
+    /* New styles for hero section */
+    #hero {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('hero-image.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 100px;
+      text-align: center;
+    }
+
+    #hero h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    /* New styles for about section */
+    #about {
+      background-color: #f9f9f9;
+      padding: 50px;
+      text-align: center;
+    }
+
+    /* New styles for services section */
+    #services {
+      background-color: #fff;
+      padding: 50px;
+      text-align: center;
+    }
+
+    #services ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #services ul li {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    /* New styles for footer */
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    .login-signup-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #888;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      border: 2px solid #888;
+      border-radius: 4px;
+    }
+
+    /* New styles for header */
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li {
+      display: inline;
+      margin-right: 10px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* New styles for hero section */
+    #hero {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('hero-image.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 100px;
+      text-align: center;
+    }
+
+    #hero h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    /* New styles for about section */
+    #about {
+      background-color: #f9f9f9;
+      padding: 50px;
+      text-align: center;
+    }
+
+    /* New styles for services section */
+    #services {
+      background-color: #fff;
+      padding: 50px;
+      text-align: center;
+    }
+
+    #services ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #services ul li {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    /* New styles for footer */
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<body>
+  
+  <header>
+    <div class="container">
+      <h1>Food For Govan</h1>
+      <nav>
+        <ul>
+          <li><a href="home.html">Home</a></li>
+          <li><a href="store.html">Store</a></li>
+          <li><a href="forum.html">Forum</a></li>
+          <li><a href="donate.html">Donate</a></li>
+          <li><a href="volunteer.html">Volunteer</a></li>
+        </ul>
+      </nav>
+      <a href="login.html" class="login-signup-button">Log In / Sign Up</a>
+    </div>
+  </header>
+  <section id="hero">
+    <div class="container">
+      <h2>Providing Food for Those in Need</h2>
+      <p>Our mission is to fight hunger in our community.</p>
+      <div class="donate-form">
+        <h3>Donate Now</h3>
+        <form>
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="Email">Email:</label>
+            <input type="Email" id="Email" name="Email" required>
+          </div>                 
+          <div class="form-group">
+            <label for="Category of Donation">Category of Donation:</label>
+<select name="Help" id="help">
+  <option value="help">Food</option>
+  <option value="help">Clothing</option>
+  <option value="help">Toiletriess</option>
+  <option value="help">Toys</option>
+</select>
+          
+          <input type="submit" value="Donate" class="btn">
+        </form>
+      </div>
+    </div>
+  </section>
+  
+  <section id="about">
+    <div class="container">
+      <h2>About Us</h2>
+      <p>Join Our Team: Volunteer at Food For Govan</p>
+      <p>Make a difference in your community by volunteering at Food For Govan</p>
+      <p>Help us fight hunger and provide nutritious meals to those in need.</p>
+      <p>Your time and effort will directly contribute to ensuring that no one in our community goes hungry.</p>
+      <p>Join us in creating a hunger-free community.</p>
+      <p>Thank you for your support.</p>
+      <p>Food For Govan Team.</p>
+    </div>
+  </section>
+  
+  <section id="services">
+    <div class="container">
+      <h2>Our Services</h2>
+      <ul>
+        <li><a href="fooddb.html">Food Distribution</a></li>
+        <li><a href="mealpg.html">Meal Programs</a></li>
+        <li><a href="fooddv.html">Food Drives</a></li>
+        <li><a href="volunteerop.html">Volunteer Opportunities</a></li>
+      </ul>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Food Bank. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
