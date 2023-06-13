@@ -5,12 +5,38 @@ SET SQL_SAFE_UPDATES = 0;
 create database userdb;
 use userdb;
 
+drop database userdb;
+
+create table Forum (
+    uniqueId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	title VARCHAR(100),
+	content VARCHAR(500),
+    username VARCHAR(45),
+    FOREIGN KEY (username) REFERENCES logininfo(username)
+);
+
+drop table Forum;
+
+create table Replies (
+    uniqueId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    replyTo INT,
+    FOREIGN KEY (replyTo) REFERENCES Forum(uniqueId),
+	title VARCHAR(100),
+	content VARCHAR(500),
+    username VARCHAR(45),
+    FOREIGN KEY (username) REFERENCES logininfo(username)
+);
+
+drop table Replies;
+
 create table logininfo (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(45),
+    username VARCHAR(45) NOT NULL UNIQUE KEY,
     userpassword VARCHAR(128),
     adminbool BOOLEAN
 );
+
+drop table logininfo;
 
 insert into logininfo(username, userpassword, adminbool) 
 values  ("admin", "e52b8910d3dd2b91e6981a5b0df632b7", true),
@@ -18,9 +44,48 @@ values  ("admin", "e52b8910d3dd2b91e6981a5b0df632b7", true),
         
 select * from logininfo where username = "admin" and userpassword = "e52b8910d3dd2b91e6981a5b0df632b7";        
 
-drop table logininfo;
+insert into forum(title, content, username) values ("HOW I SOLD MY MUM","it was ez","workerjoe" ), ("Heroes - David Bowie", 
+    "I.... I WISH YOU COULD SWIM, LIKE THE DOLPHINS.... LIKE DOLPHINS CAN SWIM. THOUGH NOTHING THOUGH NOTHING WILL KEEP US TOGETHER. WE CAN BEAT THEM FOREVER AND EVER WE CAN BE HEROES JUST FOR ONE DAY.",
+    "admin");
+
+insert into Replies(title, content, username, replyTo) values ("ur stupid", "reasons ur stupd. 1: ur cute.", "admin", 3);
+
+select * from forum;
+drop table forum;
+
+select * from replies;
+
+select * from replies where title = "ur stupid";
 
 select * from logininfo;
+
+create table foodBank(
+   	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(45) NOT NULL UNIQUE KEY
+);
+
+insert into foodBank(name) values ("Govan Food Bank");
+
+select * from foodBank;
+
+create table stock(
+   	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(45) NOT NULL UNIQUE KEY,
+    foodBankID INT,
+    FOREIGN KEY (foodBankID) references foodBank(id),
+    quantity int
+);
+
+insert into stock(name, quantity, foodBankID) values ("Potato", 12, 1);
+insert into stock(name, quantity, foodBankID) values ("cheese", 14, 1);
+
+
+select * from stock;
+
+SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id;
+
+
+drop table stock;
 
 create table categories(
 	category VARCHAR(128) NOT NULL PRIMARY KEY
