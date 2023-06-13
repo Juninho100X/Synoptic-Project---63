@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h2 Making a Post as #{loggedInAs}
+  form(action="/createPost" method="post" id="createPostForm")
+    label(for="title") Title
+    input#title(type="text" placeholder="Title" name="title" required="" maxlength=44)
+
+    br
+
+    textarea(name="content" form="createPostForm" palceholder="Contents..." required="" maxlength=499)
+
+    br
+
+    button(type="submit" id="submitButton") Post!
+                       

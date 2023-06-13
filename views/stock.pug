@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  section(id="hero")
+    h2 Stock Information
+      unless (stockInfo == undefined)
+        table(id="stockTable")
+          tr 
+            th Food Bank 
+            th Item 
+            th Quantity 
+          tr
+            for stocks in stockInfo
+              td &nbsp; #{stocks.foodBank.name} 
+              td &nbsp; #{stocks.stock.name} 
+              td &nbsp; #{stocks.stock.quantity}
+              tr

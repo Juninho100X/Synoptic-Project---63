@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  div(class="replyingToDiv")
+    h2 Replying To: 
+    h2 #{postData.title}
+    p #{postData.content} -#[strong #{postData.username}]
+
+  h2 Making the Reply as #{loggedInAs}
+  form(action="/createReply" method="post" id="createPostForm")
+    label(for="title") Title
+    input#title(type="text" placeholder="Title" name="title" required="" maxlength=44)
+    input#replyID(type="hidden" name="replyID" value=postData.uniqueId)
+    br
+
+    textarea(name="content" form="createPostForm" palceholder="Contents..." required="" maxlength=499)
+
+    br
+
+    button(type="submit" id="submitButton") Reply!
+                       

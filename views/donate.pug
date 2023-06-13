@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  section(id="hero")
+    div(class="container")
+      h2 Providing Food for Those in Need
+      p Our mission is to fight hunger in our community.
+
+      div(class="donate-form")
+        h3 Donate Now 
+        form(action="#")
+          div(class="form-group")
+            label(for="name") Name: 
+            input(type="text" id="name" name="name" required)
+        
+          div(class="form-group")
+            label(for="Email") Email: 
+            input(type="Email" id="Email" name="Email")
+          
+          input(type="submit" value="Donate" class="btn")

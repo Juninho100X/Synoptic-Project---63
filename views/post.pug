@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    ol(type=1)
+    unless (postData == undefined)
+        div(class="replyingToDiv")
+            h2 #{postData.title}
+            p #{postData.content} -#[strong #{postData.username}]
+
+        form(action="/createReply" method="get")
+            button(type="submit" id="createPostID") Reply
+
+
+        h2 Replies to the post:
+        unless (forumInfo == undefined)
+            for reply in forumInfo
+                div(class="replyDiv")
+                    h2 &nbsp; #{reply.title} 
+                    p &nbsp; #{reply.content} -#[strong #{reply.username}]

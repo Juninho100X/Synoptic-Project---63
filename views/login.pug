@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    section(id="hero")
+        if error 
+            h2 Invalid username or password
+        h2 Login or Make an Account.
+        div(class="container")
+            h2 Providing Food for Those in Need
+            p Our mission is to fight hunger in our community.
+            form(action="#" method="post")
+                div(class="donate-form")
+                    label(for="username") Username
+                    input#username(type="text" placeholder="Username" name="username" required="")
+
+                div(class="donate-form")
+                    label(for="password") Password
+                    input#password(type="password" placeholder="Password" name="password" required="")
+
+                div(class="donate-form")
+                    input(type="submit" value="Log in / Sign Up" class="btn")
+
+
+
