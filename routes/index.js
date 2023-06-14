@@ -162,12 +162,12 @@ router.post("/createPost", function(req, res, next){
 
 router.get("/forum", function(req, res, next){
   if (loggedIn) {
-    connection.query("SELECT * from forum", function (error, forumInfo) {
+    connection.query("SELECT * from forum ORDER BY uniqueID desc", function (error, forumInfo) {
       if (error) throw error;
         res.render("forum", {forumInfo, loggedInAs});
     });
   } else {
-    connection.query("SELECT * from forum", function (error, forumInfo) {
+    connection.query("SELECT * from forum ORDER BY uniqueID desc", function (error, forumInfo) {
       if (error) throw error;
         res.render("forum", {forumInfo});
     });  
@@ -179,7 +179,7 @@ router.get("/forum", function(req, res, next){
 router.get("/lookAtPost", function(req, res, next){
   connection.query("SELECT * FROM forum where title = ?", req.query.title, function (error, post) {
     if (error) throw error;
-    connection.query("SELECT * from replies where replyTo = ?", post[0].uniqueId, function (error, forumInfo) {
+    connection.query("SELECT * from replies where replyTo = ? ORDER BY uniqueId desc", post[0].uniqueId, function (error, forumInfo) {
       if (error) throw error;
         postData = post[0];
         res.render("post", {postData, forumInfo});
