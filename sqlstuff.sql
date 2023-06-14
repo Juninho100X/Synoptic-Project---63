@@ -42,7 +42,12 @@ insert into logininfo(username, userpassword, adminbool)
 values  ("admin", "e52b8910d3dd2b91e6981a5b0df632b7", true),
 		("workerjoe", "e04efcfda166ec49ba7af5092877030e", false); 
         
-select * from logininfo where username = "admin" and userpassword = "e52b8910d3dd2b91e6981a5b0df632b7";        
+TRUNCATE TABLE logininfo;
+        
+        
+select * from logininfo where username = "admin" and userpassword = "e52b8910d3dd2b91e6981a5b0df632b7";      
+
+select * from logininfo;  
 
 insert into forum(title, content, username) values ("HOW I SOLD MY MUM","it was ez","workerjoe" ), ("Heroes - David Bowie", 
     "I.... I WISH YOU COULD SWIM, LIKE THE DOLPHINS.... LIKE DOLPHINS CAN SWIM. THOUGH NOTHING THOUGH NOTHING WILL KEEP US TOGETHER. WE CAN BEAT THEM FOREVER AND EVER WE CAN BE HEROES JUST FOR ONE DAY.",
@@ -61,29 +66,53 @@ select * from logininfo;
 
 create table foodBank(
    	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(45) NOT NULL UNIQUE KEY
+    name VARCHAR(45) NOT NULL UNIQUE KEY,
+    x int,
+    y int
 );
 
-insert into foodBank(name) values ("Govan Food Bank");
+drop table foodBank;
+
+insert into foodBank(name, x, y) values ("Govan Food Bank", 10, 15);
+insert into foodBank(name, x, y) values ("All Saints Church Food Bank", 25, 30);
+insert into foodBank(name, x, y) values ("Govan Community Center Food Bank", -10, 20);
+insert into foodBank(name, x, y) values ("The Govan Pantry", 20, 10);
 
 select * from foodBank;
 
+select name from foodBank;
+
 create table stock(
    	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(45) NOT NULL UNIQUE KEY,
+    name VARCHAR(45) NOT NULL ,
     foodBankID INT,
     FOREIGN KEY (foodBankID) references foodBank(id),
     quantity int
 );
 
+drop table stock;
+
 insert into stock(name, quantity, foodBankID) values ("Potato", 12, 1);
 insert into stock(name, quantity, foodBankID) values ("cheese", 14, 1);
+insert into stock(name, quantity, foodBankID) values ("Potato", 22, 2);
+insert into stock(name, quantity, foodBankID) values ("Rice", 10, 3);
+insert into stock(name, quantity, foodBankID) values ("Rice", 10, 2);
+insert into stock(name, quantity, foodBankID) values ("Rice", 10, 1);
 
+insert into stock(name, quantity, foodBankID) values ("Rice", 25, 4);
+insert into stock(name, quantity, foodBankID) values ("pasta", 15, 4);
+insert into stock(name, quantity, foodBankID) values ("Carrots", 5, 4);
+insert into stock(name, quantity, foodBankID) values ("Apples", 20, 3);
+
+drop table stock;
 
 select * from stock;
 
 SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id;
 
+SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id where foodBank.name = "Govan Food Bank";
+
+SELECT foodBank.name, foodBank.x, foodBank.y from foodBank;
 
 drop table stock;
 

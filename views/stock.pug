@@ -3,15 +3,27 @@ extends layout
 block content
   section(id="hero")
     h2 Stock Information
-      unless (stockInfo == undefined)
-        table(id="stockTable")
-          tr 
-            th Food Bank 
-            th Item 
-            th Quantity 
-          tr
-            for stocks in stockInfo
-              td &nbsp; #{stocks.foodBank.name} 
-              td &nbsp; #{stocks.stock.name} 
-              td &nbsp; #{stocks.stock.quantity}
-              tr
+
+    h2 Your Closest Food Bank is #{result.name}
+
+    label(for="foodBank") Sort By FoodBanks: 
+    select(id="foodBank" name="foodBanks" form="stockForm")
+      for foodBank in foodBanks 
+        option(name="values" value=foodBank.name) #{foodBank.name}
+
+    form(action="/searchStockTableName" method="post" id="stockForm")
+      br
+      input(type="submit")
+
+    unless (stockInfo == undefined)
+      table(id="stockTable")
+        tr 
+          th Food Bank 
+          th Item 
+          th Quantity 
+        tr
+          for stocks in stockInfo
+            td &nbsp; #{stocks.foodBank.name} 
+            td &nbsp; #{stocks.stock.name} 
+            td &nbsp; #{stocks.stock.quantity}
+            tr

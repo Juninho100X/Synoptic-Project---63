@@ -8,6 +8,8 @@ const connection = require("../models/userModel");
 loggedIn = false;
 loggedInAs = "";
 
+positionVector = {x: 0, y:0};
+
 router.get('/', function(req, res, next) {
   res.render("home");
 });
@@ -28,14 +30,89 @@ router.get('/volunteer', function(req, res, next) {
   res.render('volunteer');
 });
 
+function euclidianDistance(x1, y1, x2, y2){ // A function to calculate the distance between two coordinates
+  return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+}
+
+function closestFoodBank(results) { // A function to find the shortest food bank
+  array = []
+  for (i of results){
+    // filling a temporary array with objects with the name of the food bank and distance from user
+    array.push({name: i.name, distance: (euclidianDistance(i.x, i.y, positionVector.x, positionVector.y))})
+  }
+  let temp = {name: "", distance: Infinity};
+  for (i of array) { // finding the shortest distance
+    if (i.distance < temp.distance) {
+      temp = i;
+    }
+  }
+  return temp;
+}
+
+
+function eucldianDistanceTestHarness(){//a test harness for euclidian distance
+  if (euclidianDistance(5, 5, 10, 10).toFixed(5) != 7.07107){ //expected normal values
+     return false;
+  }
+
+  if (euclidianDistance(0.123, 101200000, 132341, 0.000000001).toFixed(5) != 101200086.53212){ //large and small values
+     return false;
+  }
+  
+  if (euclidianDistance(-1000000, -20000, 5, 2).toFixed(5) != 1000205.01900){ //mix of negative and positive numbers
+     return false;
+  }
+
+  return true;
+}
+
+function closestFoodBankTestHarness(){//test harness for the closestFoodBank function
+  testData = [{name: "testData1", x: 0, y: 0}, {name: "testData2", x: 15, y: 10}, 
+              {name: "testData3", x: 1424123, y: 0.0001}, {name: "testData4", x: -20, y: 123},
+              {name: "testData5", x: 0.1, y:-200}]; //test data
+
+  if (closestFoodBank(testData).name != "testData1") {
+    return false;
+  }
+
+  return true;
+}
+
+console.log("eucldianDistance passed the test?", eucldianDistanceTestHarness());
+
+console.log("closestFoodBank passed the test?", closestFoodBankTestHarness());
+
 router.get("/stock", function(req, res, next){
   sqlQuery = {sql: "SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id;", nestTables: true};
   connection.query(sqlQuery, function (error, stockInfo) {
     if (error) throw error;
-    console.log(stockInfo)
-    res.render("stock", {stockInfo});
+    connection.query("SELECT name FROM foodBank", function (error, foodBanks) {
+      if (error) throw error;
+        connection.query("SELECT foodBank.name, foodBank.x, foodBank.y FROM foodBank", function (error, results) {
+          if (error) throw error;
+          let result = closestFoodBank(results);
+          res.render("stock", {stockInfo, foodBanks, result});
+      });
+    });
   });
 })
+
+router.post("/searchStockTableName", function(req, res, next){
+  console.log(req.body.foodBanks)
+  sqlQuery = {sql: "SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id where foodBank.name = ?;", nestTables: true};
+  connection.query(sqlQuery, String(req.body.foodBanks), function (error, stockInfo) {
+    if (error) throw error;
+    connection.query("SELECT name FROM foodBank", function (error, foodBanks) {
+      if (error) throw error;
+      connection.query("SELECT foodBank.name, foodBank.x, foodBank.y FROM foodBank", function (error, results) {
+        if (error) throw error;
+        console.log(results)
+        let result = closestFoodBank(results);
+        res.render("stock", {stockInfo, foodBanks, result});
+      });
+    });
+  });
+});
 
 router.get("/createReply", function(req, res, next) {
   if (loggedIn) {
@@ -82,6 +159,7 @@ router.post("/createPost", function(req, res, next){
 });
 
 
+
 router.get("/forum", function(req, res, next){
   if (loggedIn) {
     connection.query("SELECT * from forum", function (error, forumInfo) {
@@ -104,7 +182,6 @@ router.get("/lookAtPost", function(req, res, next){
     connection.query("SELECT * from replies where replyTo = ?", post[0].uniqueId, function (error, forumInfo) {
       if (error) throw error;
         postData = post[0];
-        console.log(postData)
         res.render("post", {postData, forumInfo});
     });
   });
@@ -140,6 +217,30 @@ router.post("/login", function (req, res, next) {
     } else {
       res.render("login", {error : true});
     }
+  });
+});
+
+router.get("/makeAccount", function (req, res, next) {
+  res.render("makeAccount");
+});
+
+router.post("/makeAccount", function (req, res, next) {
+  const username = req.body.username;
+  const password = req.body.password;
+   
+  loggedIn = false;
+  loggedInAs = "";
+
+  var hash = crypto.createHash('md5').update(password).digest('hex');
+  var sql = "insert into logininfo(username, userpassword, adminbool) values (?, ?, ?)";
+  connection.query(sql, [username, hash, false], function(error, result){
+    if (error) throw error;
+
+    loggedIn = true;
+    loggedInAs = username;
+
+    res.redirect("/loggedIn");
+
   });
 });
 
