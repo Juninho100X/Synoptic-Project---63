@@ -5,36 +5,19 @@ var crypto = require("crypto");
 
 const connection = require("../models/userModel");
 
+
+//globals
 loggedIn = false;
 loggedInAs = "";
 
-positionVector = {x: 0, y:0};
+positionVector = {x: 0, y:0}; //the users location
 
-router.get('/', function(req, res, next) {
-  res.render("home");
-});
-
-router.get('/donate', function(req, res, next) {
-  res.render('donate');
-});
-
-router.get('/layout', function(req, res, next) {
-  res.render('layout');
-});
-
-router.get('/home', function(req, res, next) {
-  res.render('home');
-});
-
-router.get('/volunteer', function(req, res, next) {
-  res.render('volunteer');
-});
 
 function euclidianDistance(x1, y1, x2, y2){ // A function to calculate the distance between two coordinates
   return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
 }
 
-function closestFoodBank(results) { // A function to find the shortest food bank
+function closestFoodBank(results) { // A function to find the shortest distance to a food bank
   array = []
   for (i of results){
     // filling a temporary array with objects with the name of the food bank and distance from user
@@ -48,7 +31,6 @@ function closestFoodBank(results) { // A function to find the shortest food bank
   }
   return temp;
 }
-
 
 function eucldianDistanceTestHarness(){//a test harness for euclidian distance
   if (euclidianDistance(5, 5, 10, 10).toFixed(5) != 7.07107){ //expected normal values
@@ -78,11 +60,35 @@ function closestFoodBankTestHarness(){//test harness for the closestFoodBank fun
   return true;
 }
 
+//test harness output
 console.log("eucldianDistance passed the test?", eucldianDistanceTestHarness());
-
 console.log("closestFoodBank passed the test?", closestFoodBankTestHarness());
 
-router.get("/stock", function(req, res, next){
+
+//------------------------Express gets and posts--------------------//
+
+
+router.get('/', function(req, res, next) {
+  res.render("home");
+});
+
+router.get('/donate', function(req, res, next) {
+  res.render('donate');
+});
+
+router.get('/layout', function(req, res, next) {
+  res.render('layout');
+});
+
+router.get('/home', function(req, res, next) {
+  res.render('home');
+});
+
+router.get('/volunteer', function(req, res, next) {
+  res.render('volunteer');
+});
+
+router.get("/stock", function(req, res, next){ //this gets retrieves the stock levels for all the food banks so it may be displayed
   sqlQuery = {sql: "SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id;", nestTables: true};
   connection.query(sqlQuery, function (error, stockInfo) {
     if (error) throw error;
@@ -97,7 +103,7 @@ router.get("/stock", function(req, res, next){
   });
 })
 
-router.post("/searchStockTableName", function(req, res, next){
+router.post("/searchStockTableName", function(req, res, next){ //this allows users to search by food bank name
   console.log(req.body.foodBanks)
   sqlQuery = {sql: "SELECT foodBank.name, stock.name, stock.quantity from stock INNER JOIN foodBank on stock.foodBankID=foodBank.id where foodBank.name = ?;", nestTables: true};
   connection.query(sqlQuery, String(req.body.foodBanks), function (error, stockInfo) {
@@ -114,7 +120,7 @@ router.post("/searchStockTableName", function(req, res, next){
   });
 });
 
-router.get("/createReply", function(req, res, next) {
+router.get("/createReply", function(req, res, next) { //gets information related to replying
   if (loggedIn) {
     connection.query("SELECT * from forum", function (error, forumInfo) {
       if (error) throw error;
@@ -128,7 +134,7 @@ router.get("/createReply", function(req, res, next) {
   }
 })
 
-router.post("/createReply", function(req, res, next) {
+router.post("/createReply", function(req, res, next) { //sends users reply to sql database
   var sql = "insert into replies(title, content, username, replyTo) values (?, ?, ?, ?)";
   connection.query(sql, [String(req.body.title), String(req.body.content), String(loggedInAs), req.body.replyID], function(error, result){
     if (error) throw error;
@@ -139,7 +145,7 @@ router.post("/createReply", function(req, res, next) {
   });
 });
 
-router.get("/createPost", function(req, res, next){
+router.get("/createPost", function(req, res, next){ //retrieves information about if the users is logged in
   if (!loggedIn) {
     res.redirect("login");
   } else {
@@ -147,7 +153,7 @@ router.get("/createPost", function(req, res, next){
   }
 });
 
-router.post("/createPost", function(req, res, next){
+router.post("/createPost", function(req, res, next){ //sends users post data to the database
   var sql = "insert into forum(title, content, username) values (?, ?, ?)";
   connection.query(sql, [String(req.body.title), String(req.body.content), String(loggedInAs)], function(error, result){
     if (error) throw error;
@@ -160,7 +166,7 @@ router.post("/createPost", function(req, res, next){
 
 
 
-router.get("/forum", function(req, res, next){
+router.get("/forum", function(req, res, next){ //gets all the posts so they may be displayed
   if (loggedIn) {
     connection.query("SELECT * from forum ORDER BY uniqueID desc", function (error, forumInfo) {
       if (error) throw error;
@@ -176,7 +182,7 @@ router.get("/forum", function(req, res, next){
 
 
 
-router.get("/lookAtPost", function(req, res, next){
+router.get("/lookAtPost", function(req, res, next){ //a function to look at any replys a post has
   connection.query("SELECT * FROM forum where title = ?", req.query.title, function (error, post) {
     if (error) throw error;
     connection.query("SELECT * from replies where replyTo = ? ORDER BY uniqueId desc", post[0].uniqueId, function (error, forumInfo) {
@@ -188,24 +194,24 @@ router.get("/lookAtPost", function(req, res, next){
 })
 
 
-router.get('/login', function(req, res, next) {
+router.get('/login', function(req, res, next) { //login
   loggedIn = false;
   loggedInAs = ""
   res.render("login", { title: "Login"})
 });
 
-router.get("/loggedIn", function(req, res, next){
+router.get("/loggedIn", function(req, res, next){ //a little page to tell the user if they have logged in succesfully
   res.render("loggedIn", {loggedInAs})
 })
 
-router.post("/login", function (req, res, next) {
+router.post("/login", function (req, res, next) { //sending login details to sql server and checking if they are correct
   const username = req.body.username;
   const password = req.body.password;
    
   loggedIn = false;
   loggedInAs = "";
 
-  const hash = crypto.createHash("md5").update(password).digest("hex");
+  const hash = crypto.createHash("md5").update(password).digest("hex"); //encrypt users password
   var sql = "select * from logininfo where username = ? and userpassword = ?";
   connection.query(sql, [username, hash], function(error, result){
     if (error) throw error;
@@ -224,7 +230,7 @@ router.get("/makeAccount", function (req, res, next) {
   res.render("makeAccount");
 });
 
-router.post("/makeAccount", function (req, res, next) {
+router.post("/makeAccount", function (req, res, next) {  //makes a users account (password info is encrypted.)
   const username = req.body.username;
   const password = req.body.password;
    
